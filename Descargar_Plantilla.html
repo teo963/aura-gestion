@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Descargar Plantilla - Importación de Facturas</title>
+    <script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+        }
+        .container {
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+            text-align: center;
+        }
+        .subtitle {
+            text-align: center;
+            color: #666;
+            margin-bottom: 30px;
+            font-size: 14px;
+        }
+        .info-section {
+            background: #f0f8ff;
+            border-left: 4px solid #667eea;
+            padding: 15px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+        }
+        .info-section h3 {
+            color: #667eea;
+            margin-bottom: 10px;
+            font-size: 16px;
+        }
+        .info-section ul {
+            list-style: none;
+            padding-left: 0;
+        }
+        .info-section li {
+            margin: 8px 0;
+            color: #555;
+            padding-left: 20px;
+            position: relative;
+        }
+        .info-section li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #4CAF50;
+            font-weight: bold;
+        }
+        .buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 30px;
+            flex-wrap: wrap;
+        }
+        button {
+            flex: 1;
+            min-width: 150px;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .btn-download {
+            background: #4CAF50;
+            color: white;
+        }
+        .btn-download:hover {
+            background: #45a049;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(76, 175, 80, 0.3);
+        }
+        .btn-secondary {
+            background: #f0f0f0;
+            color: #333;
+        }
+        .btn-secondary:hover {
+            background: #e0e0e0;
+        }
+        .instructions {
+            background: #fff9e6;
+            border: 1px solid #ffd700;
+            padding: 15px;
+            border-radius: 4px;
+            margin-top: 20px;
+        }
+        .instructions h4 {
+            color: #d4a017;
+            margin-bottom: 10px;
+        }
+        .instructions ol {
+            padding-left: 20px;
+            color: #555;
+        }
+        .instructions li {
+            margin: 8px 0;
+        }
+        .status {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 4px;
+            text-align: center;
+            display: none;
+        }
+        .status.success {
+            background: #d4edda;
+            color: #155724;
+            border: 1px solid #c3e6cb;
+            display: block;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>📊 Plantilla de Importación de Facturas</h1>
+        <p class="subtitle">Descarga la plantilla para importar facturas en tu aplicación AURA</p>
+
+        <div class="info-section">
+            <h3>📋 Contenido de la Plantilla</h3>
+            <ul>
+                <li><strong>Hoja 1: Facturas Emitidas</strong> - Ingresos (lo que cobras a clientes)</li>
+                <li><strong>Hoja 2: Facturas Recibidas</strong> - Gastos (lo que pagas a proveedores)</li>
+                <li><strong>Hoja 3: Ejemplo</strong> - Datos de referencia</li>
+                <li><strong>Hoja 4: Instrucciones</strong> - Guía de uso</li>
+            </ul>
+        </div>
+
+        <div class="info-section">
+            <h3>📝 Campos Obligatorios (*)</h3>
+            <ul>
+                <li>Núm. Factura - Número identificador</li>
+                <li>Fecha - Formato DD/MM/YYYY</li>
+                <li>Cliente/Proveedor - Nombre</li>
+                <li>Base Imponible o Total - Importe</li>
+            </ul>
+        </div>
+
+        <div class="buttons">
+            <button class="btn-download" onclick="descargarPlantilla()">
+                📥 Descargar Plantilla Excel
+            </button>
+        </div>
+
+        <div class="instructions">
+            <h4>💡 Instrucciones de Uso</h4>
+            <ol>
+                <li>Haz clic en el botón para descargar la plantilla</li>
+                <li>Abre el archivo en Excel o similar</li>
+                <li>Completa los datos en las hojas correspondientes:
+                    <ul style="margin-top: 5px; padding-left: 20px">
+                        <li><strong>Facturas Emitidas:</strong> Tus ingresos</li>
+                        <li><strong>Facturas Recibidas:</strong> Tus gastos</li>
+                    </ul>
+                </li>
+                <li>Respeta el formato de fechas: DD/MM/YYYY (ej: 15/03/2026)</li>
+                <li>Usa punto (.) para decimales (ej: 1500.50)</li>
+                <li>No dejes en blanco los campos marcados con (*)</li>
+                <li>Guarda el archivo</li>
+                <li>Abre tu aplicación AURA y ve a "📤 Importar Facturas desde Excel"</li>
+                <li>Selecciona tu archivo completado</li>
+            </ol>
+        </div>
+
+        <div class="status success" id="statusDiv">
+            ✅ Plantilla descargada correctamente
+        </div>
+    </div>
+
+    <script>
+        function descargarPlantilla() {
+            // HOJA 1: INSTRUCCIONES
+            const wsInstr = [
+                ['PLANTILLA DE IMPORTACIÓN - FACTURAS EMITIDAS Y RECIBIDAS'],
+                [],
+                ['INSTRUCCIONES'],
+                [],
+                ['1. Facturas Emitidas = INGRESOS (lo que cobras a los clientes)'],
+                ['2. Facturas Recibidas = GASTOS (lo que pagas a proveedores)'],
+                ['3. Los campos marcados con (*) son obligatorios'],
+                ['4. Usa el formato de fecha DD/MM/YYYY (ej: 15/03/2026)'],
+                ['5. Los decimales se separan con punto (ej: 1500.50)'],
+                ['6. Copia los datos completados y pégalos en tu aplicación']
+            ];
+
+            // HOJA 2: FACTURAS EMITIDAS
+            const wsEmitidas = [
+                ['Núm. Factura*', 'Fecha Factura*', 'Cliente*', '% IRPF', 'Total IRPF (€)', 'Total Factura (€)'],
+                [101, '15/01/2026', 'Cliente ABC S.L.', 15, 150, 1000],
+                [102, '20/01/2026', 'Empresa XYZ', 0, 0, 500],
+                [103, '25/02/2026', 'Consultoría 123', 19, 380, 2000]
+            ];
+
+            // HOJA 3: FACTURAS RECIBIDAS
+            const wsRecibidas = [
+                ['Fecha*', 'Proveedor*', 'Concepto*', 'Base Imponible (€)*', 'Retenciones (€)', 'IVA (€)', 'Total (€)'],
+                ['05/01/2026', 'Proveedores SA', 'Suministros', 500, 0, 105, 605],
+                ['12/02/2026', 'Servicios Tech', 'Hosting anual', 600, 114, 126, 840],
+                ['28/02/2026', 'Ministerio', 'Impuestos', 1000, 0, 0, 1000]
+            ];
+
+            // HOJA 4: EJEMPLO
+            const wsEjemplo = [
+                ['EJEMPLO - Aquí puedes ver cómo rellenar correctamente'],
+                [],
+                ['Facturas Emitidas (Ingresos)'],
+                ['Núm. Factura', 'Fecha', 'Cliente', 'Importe'],
+                [101, '15/01/2026', 'Mi Cliente', 1500.00],
+                [],
+                ['Facturas Recibidas (Gastos)'],
+                ['Fecha', 'Proveedor', 'Concepto', 'Base', 'IVA', 'Total'],
+                ['05/01/2026', 'Mi Proveedor', 'Servicios', 500.00, 105.00, 605.00]
+            ];
+
+            // Crear workbook
+            const wb = XLSX.utils.book_new();
+
+            // Agregar hojas
+            const sheet1 = XLSX.utils.aoa_to_sheet(wsInstr);
+            sheet1['!cols'] = [{wch: 80}];
+            XLSX.utils.book_append_sheet(wb, sheet1, 'Instrucciones');
+
+            const sheet2 = XLSX.utils.aoa_to_sheet(wsEmitidas);
+            sheet2['!cols'] = [{wch: 16}, {wch: 15}, {wch: 25}, {wch: 12}, {wch: 16}, {wch: 16}];
+            XLSX.utils.book_append_sheet(wb, sheet2, 'Facturas Emitidas');
+
+            const sheet3 = XLSX.utils.aoa_to_sheet(wsRecibidas);
+            sheet3['!cols'] = [{wch: 14}, {wch: 24}, {wch: 28}, {wch: 16}, {wch: 16}, {wch: 12}, {wch: 14}];
+            XLSX.utils.book_append_sheet(wb, sheet3, 'Facturas Recibidas');
+
+            const sheet4 = XLSX.utils.aoa_to_sheet(wsEjemplo);
+            sheet4['!cols'] = [{wch: 20}, {wch: 20}, {wch: 20}, {wch: 16}, {wch: 16}, {wch: 16}];
+            XLSX.utils.book_append_sheet(wb, sheet4, 'Ejemplo');
+
+            // Descargar
+            XLSX.writeFile(wb, 'Plantilla_Importacion_Facturas.xlsx');
+
+            // Mostrar confirmación
+            const statusDiv = document.getElementById('statusDiv');
+            statusDiv.style.display = 'block';
+            setTimeout(() => {
+                statusDiv.style.display = 'none';
+            }, 3000);
+        }
+
+        // Auto-descargar si viene con parámetro
+        if (new URLSearchParams(window.location.search).get('auto') === '1') {
+            window.onload = () => descargarPlantilla();
+        }
+    </script>
+</body>
+</html>
