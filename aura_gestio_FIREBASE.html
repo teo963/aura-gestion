@@ -455,10 +455,10 @@ canvas {
 }
 </style>
 
-<!-- Firebase SDK -->
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database.js"></script>
-<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js"></script>
+<!-- Firebase SDK (UMD/Compat version for regular script tags) -->
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-database-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.8.0/firebase-auth-compat.js"></script>
 
 <script>
 // Firebase Configuration
@@ -472,13 +472,21 @@ const firebaseConfig = {
 };
 
 // Initialize Firebase
-const fbApp = firebase.initializeApp(firebaseConfig);
-const fbDb = firebase.database();
-const fbAuth = firebase.auth();
-
-// Flag para sincronización
-let firebaseEnabled = true;
+let fbApp, fbDb, fbAuth;
+let firebaseEnabled = false;
 let syncInProgress = false;
+
+// Initialize Firebase safely
+try {
+  fbApp = firebase.initializeApp(firebaseConfig);
+  fbDb = firebase.database();
+  fbAuth = firebase.auth();
+  firebaseEnabled = true;
+  console.log('✓ Firebase initialized successfully');
+} catch (err) {
+  console.error('Firebase initialization failed:', err);
+  firebaseEnabled = false;
+}
 
 // Sincronizar datos con Firebase
 async function syncToFirebase(storeName, item) {
@@ -539,10 +547,12 @@ async function setupRealtimeSync() {
 }
 
 // Auth anónima automática
-firebase.auth().signInAnonymously().catch(err => {
-  console.warn('Firebase auth error:', err.message);
-  firebaseEnabled = false;
-});
+if (firebaseEnabled && fbAuth) {
+  fbAuth.signInAnonymously().catch(err => {
+    console.warn('Firebase auth error:', err.message);
+    firebaseEnabled = false;
+  });
+}
 
 // Cuando auth está lista
 fbAuth.onAuthStateChanged(user => {
