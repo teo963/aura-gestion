@@ -35,6 +35,7 @@ body{font-family:'DM Sans',sans-serif;background:var(--bg);color:var(--text);min
 .btn-secondary{background:var(--surface);color:var(--text);border:1px solid var(--border)}.btn-secondary:hover{background:var(--bg)}
 .btn-danger{background:var(--danger-light);color:var(--danger)}.btn-danger:hover{background:#fccaca}
 .btn-success{background:var(--accent2-light);color:var(--accent2)}.btn-success:hover{background:#b8ddd8}
+.btn-info{background:#e0ecff;color:#2563eb}.btn-info:hover{background:#c7e0ff}
 .btn-sm{padding:4px 9px;font-size:.75rem}
 .content{padding:22px 26px;flex:1}
 .stats-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(165px,1fr));gap:13px;margin-bottom:22px}
@@ -634,10 +635,22 @@ fbAuth.onAuthStateChanged(user => {
           <h3>📥 Copias y recuperación</h3>
           <p>Exporta todos los datos, descarga una copia JSON o restaura la última copia interna.</p>
           <div class="tool-actions-clean">
-            <button class="btn btn-success btn-sm" onclick="exportExcel()">Exportar Excel</button>
+            <button class="btn btn-success btn-sm" onclick="exportExcel()">Exportar Excel Completo</button>
             <button class="btn btn-secondary btn-sm" onclick="descargarCopiaSeguridad()">💾 Copia seguridad</button>
             <button class="btn btn-secondary btn-sm" onclick="restaurarUltimaCopiaSeguridad()">↩️ Restaurar copia</button>
             <button class="btn btn-primary btn-sm" onclick="restaurarDatosExcelRecuperado(true)">♻️ Restaurar Excel recuperado</button>
+          </div>
+        </div>
+
+        <div class="tool-card">
+          <h3>📊 Exportar datos específicos</h3>
+          <p>Descarga Excel solo con los datos que necesitas: alumnos, sesiones, facturas, cobros o caja.</p>
+          <div class="tool-actions-clean">
+            <button class="btn btn-info btn-sm" onclick="exportarAlumnos()">📝 Exportar Alumnos</button>
+            <button class="btn btn-info btn-sm" onclick="exportarSesiones()">📋 Exportar Sesiones</button>
+            <button class="btn btn-info btn-sm" onclick="exportarFacturas()">💰 Exportar Facturas</button>
+            <button class="btn btn-info btn-sm" onclick="exportarCobros()">✅ Exportar Cobros</button>
+            <button class="btn btn-info btn-sm" onclick="exportarCaja()">🏦 Exportar Caja</button>
           </div>
         </div>
 
@@ -1135,227 +1148,130 @@ fbAuth.onAuthStateChanged(user => {
 
     <!-- PROTECCIÓ DE DADES / FORMULARI FAMÍLIES -->
     <div class="section" id="section-proteccio">
-      <div class="info-box"><b>Protecció de dades:</b> formulari en català per enviar a famílies, recollir dades, consentiments i signatura. En desar-lo, actualitza automàticament la fitxa de l’alumne i guarda una còpia signada en l’arxiu local. La signatura és electrònica simple; per a signatura avançada/certificada caldria integrar un proveïdor extern.</div>
-      <div class="lopd-wrap">
-        <div class="container">
-  <!-- LOGO I ENCAPÇALAMENT -->
-  <div class="logo-section">
-    <svg viewBox="0 0 1200 400" style="max-height: 100px; margin-bottom: 15px;" xmlns="http://www.w3.org/2000/svg">
-      <!-- Cercles de colors -->
-      <circle cx="350" cy="80" r="40" fill="#FFEB00"/>
-      <circle cx="600" cy="40" r="50" fill="#E91E8C"/>
-      <circle cx="850" cy="60" r="45" fill="#00B894"/>
-      <circle cx="1000" cy="150" r="40" fill="#2C3E8F"/>
-      <circle cx="1050" cy="280" r="35" fill="#FF5722"/>
-      <circle cx="850" cy="320" r="40" fill="#00BCD4"/>
-      <circle cx="550" cy="350" r="35" fill="#9C27B0"/>
-      <circle cx="300" cy="280" r="40" fill="#4CAF50"/>
+      <div class="info-box">🔐 <b>Protecció de dades GDPR</b> - Formulari Formspree (100% GDPR-compliant, servers a Europa)</div>
 
-      <!-- Text AURA -->
-      <text x="600" y="220" font-size="140" font-weight="bold" text-anchor="middle" fill="#1a1714" font-family="Arial">AURA</text>
+      <div class="card">
+        <div class="card-header"><h3>📋 Formulari de Registre de Menors i Tutors</h3></div>
+        <div class="card-body" style="padding:20px">
+          <p style="margin-bottom:16px;color:var(--text2)">Formulari segur per recollir dades de menors i tutors legals. Les dades es processen de forma segura i compleixen totalment amb RGPD.</p>
 
-      <!-- Subtítol -->
-      <text x="600" y="300" font-size="40" text-anchor="middle" fill="#555" font-family="Arial">SERVEIS EDUCATIUS</text>
-    </svg>
-    <h1>Aura Serveis Educatius</h1>
-    <p>Formulari de Registre de Menors i Tutors</p>
-  </div>
+          <form action="https://formspree.io/f/mgejbkqj" method="POST" style="max-width:100%">
 
-  <div id="message"></div>
+            <!-- DADES DEL MENOR -->
+            <div style="margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:16px">
+              <h3 style="margin-bottom:12px">👤 Dades del Menor</h3>
 
-  <form id="formularioMenores">
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                <div>
+                  <label style="display:block;font-weight:500;margin-bottom:4px">Nom *</label>
+                  <input type="text" name="menor_nom" placeholder="Ex: Joan" required style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px">
+                </div>
+                <div>
+                  <label style="display:block;font-weight:500;margin-bottom:4px">Cognoms *</label>
+                  <input type="text" name="menor_cognoms" placeholder="Ex: García López" required style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px">
+                </div>
+              </div>
 
-    <!-- DADES DEL MENOR -->
-    <div class="form-section">
-      <h2>Dades del Menor</h2>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                <div>
+                  <label style="display:block;font-weight:500;margin-bottom:4px">DNI/NIE *</label>
+                  <input type="text" name="menor_dni" placeholder="12345678X" maxlength="12" required style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px">
+                </div>
+                <div>
+                  <label style="display:block;font-weight:500;margin-bottom:4px">Data de naixement *</label>
+                  <input type="date" name="menor_data_naix" required style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px">
+                </div>
+              </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label class="required">Nom</label>
-          <input type="text" name="menorNombre" placeholder="Ex: Joan" required>
-        </div>
-        <div class="form-group">
-          <label class="required">Cognoms</label>
-          <input type="text" name="menorApellidos" placeholder="Ex: García López" required>
-        </div>
-      </div>
+              <div style="margin-bottom:12px">
+                <label style="display:block;font-weight:500;margin-bottom:4px">Email</label>
+                <input type="email" name="menor_email" placeholder="joan@email.com" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px">
+              </div>
 
-      <div class="form-row">
-        <div class="form-group">
-          <label class="required">Correu electrònic</label>
-          <input type="email" name="menorEmail" placeholder="joan@email.com" required>
-        </div>
-        <div class="form-group">
-          <label>Telèfon</label>
-          <input type="tel" name="menorTelefono" placeholder="+34 600 000 000">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="required">DNI/NIE</label>
-          <input type="text" name="menorDNI" placeholder="12345678X" maxlength="12" required>
-        </div>
-        <div class="form-group">
-          <label class="required">Data de naixement</label>
-          <input type="date" name="menorFecha" required>
-        </div>
-      </div>
-
-      <div class="form-row full">
-        <div class="form-group">
-          <label>Adreça <span class="optional-note">(opcional)</span></label>
-          <input type="text" name="menorDireccion" placeholder="Carrer, número, pis">
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label>Codi Postal <span class="optional-note">(opcional)</span></label>
-          <input type="text" name="menorCP" placeholder="28001">
-        </div>
-        <div class="form-group">
-          <label>Ciutat <span class="optional-note">(opcional)</span></label>
-          <input type="text" name="menorCiudad" placeholder="Madrid">
-        </div>
-      </div>
-    </div>
-
-    <!-- DADES DEL TUTOR -->
-    <div class="form-section">
-      <h2>Dades del Tutor Legal</h2>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="required">Nom</label>
-          <input type="text" name="tutorNombre" placeholder="Ex: Maria" required>
-        </div>
-        <div class="form-group">
-          <label class="required">Cognoms</label>
-          <input type="text" name="tutorApellidos" placeholder="Ex: García López" required>
-        </div>
-      </div>
-
-      <div class="form-row">
-        <div class="form-group">
-          <label class="required">DNI/NIE</label>
-          <input type="text" name="tutorDNI" placeholder="12345678X" maxlength="12" required>
-        </div>
-        <div class="form-group">
-          <label>Telèfon</label>
-          <input type="tel" name="tutorTelefono" placeholder="+34 600 000 000">
-        </div>
-      </div>
-
-      <div class="form-row full">
-        <div class="form-group">
-          <label class="required">Correu electrònic</label>
-          <input type="email" name="tutorEmail" placeholder="maria@email.com" required>
-        </div>
-      </div>
-    </div>
-
-    <!-- CONSENTIMENTS -->
-    <div class="form-section">
-      <h2>Consentiments RGPD</h2>
-
-      <div class="info-box">
-        Les vostres dades estan protegides conforme a la Normativa de Protecció de Dades. Es farà ús únic per a fins educatius. Podeu exercir els drets d'accés, rectificació o supressió de dades en qualsevol moment.
-      </div>
-
-      <div class="checkbox-group">
-        <label>
-          <input type="checkbox" name="consent1" required>
-          Accepto el tractament de dades personals necessari per a la prestació dels serveis educatius *
-        </label>
-        <label>
-          <input type="checkbox" name="consent2" required>
-          Autoritzo comunicacions per correu, telèfon i WhatsApp sobre horaris, factures i seguiment educatiu *
-        </label>
-        <label>
-          <input type="checkbox" name="consent3" required>
-          Autoritzo la coordinació educativa amb escoles/instituts o professionals vinculats *
-        </label>
-      </div>
-    </div>
-
-    <!-- SIGNATURA -->
-    <div class="form-section">
-      <h2>Signatura Digital</h2>
-      <p style="color: #6b6459; font-size: 0.9rem; margin-bottom: 10px;">Signeu en el requadre amb el ratolí o el dit</p>
-      <canvas id="canvas"></canvas>
-      <button type="button" class="btn btn-secondary" style="margin-top: 10px;" onclick="limpiarFirma()">Esborrar signatura</button>
-    </div>
-
-    <!-- BOTONS -->
-    <div class="button-group">
-      <button type="submit" class="btn btn-primary">Guardar Registre</button>
-      <button type="reset" class="btn btn-secondary">Netejar Tot</button>
-    </div>
-  </form>
-
-  <div id="status"></div>
-</div>
-<div class="card">
-          <div class="card-header"><h3>🔐 Formulari per a famílies</h3></div>
-          <div class="card-body" style="padding:16px">
-            <div class="form-grid">
-              <div class="form-group full"><label>Carregar dades d’un alumne existent</label><select id="lopd-alumne-select" onchange="prefillLOPDFromAlumne(); refreshLOPDPublicLink()"></select></div>
-              <div class="form-group"><label>Nom alumne/a *</label><input id="lopd-alumne" placeholder="Nom i cognoms"></div>
-              <div class="form-group"><label>DNI/NIE alumne/a</label><input id="lopd-dni" placeholder="Opcional"></div>
-              <div class="form-group"><label>Data naixement</label><input id="lopd-naix" type="date"></div>
-              <div class="form-group"><label>Tipus alumne/a</label><select id="lopd-tipus"><option value="privado">Privat</option><option value="beca_aura">Beca gestionada per Aura</option><option value="puig_cargol">Puig Cargol</option><option value="empordanet">Empordanet</option></select></div>
-              <div class="form-group full"><label>Adreça</label><input id="lopd-direccio" placeholder="Carrer, número, pis..."></div>
-              <div class="form-group"><label>Codi postal</label><input id="lopd-cp"></div>
-              <div class="form-group"><label>Població</label><input id="lopd-poblacio"></div>
-              <div class="form-group"><label>Tutor/a legal *</label><input id="lopd-tutor"></div>
-              <div class="form-group"><label>DNI/NIE tutor/a</label><input id="lopd-tutor-dni"></div>
-              <div class="form-group"><label>Telèfon *</label><input id="lopd-tel"></div>
-              <div class="form-group"><label>Email família *</label><input id="lopd-email" type="email"></div>
-              <div class="form-group full"><label>Observacions</label><textarea id="lopd-obs" placeholder="Informació educativa, necessitats, observacions familiars..."></textarea></div>
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+                <div>
+                  <label style="display:block;font-weight:500;margin-bottom:4px">Telèfon</label>
+                  <input type="tel" name="menor_tel" placeholder="+34 600 000 000" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px">
+                </div>
+                <div>
+                  <label style="display:block;font-weight:500;margin-bottom:4px">Adreça</label>
+                  <input type="text" name="menor_adreca" placeholder="Carrer, número, pis" style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px">
+                </div>
+              </div>
             </div>
-            <h3 style="margin-top:16px">Consentiments</h3>
-            <div class="legal-text" id="lopd-legal-text"></div>
-            <label style="display:flex;gap:8px;align-items:flex-start;margin-top:10px"><input type="checkbox" id="lopd-consent-dades" style="width:auto;margin-top:3px"> Accepto el tractament de dades necessari per a la prestació dels serveis educatius.</label>
-            <label style="display:flex;gap:8px;align-items:flex-start"><input type="checkbox" id="lopd-consent-com" style="width:auto;margin-top:3px"> Autoritzo comunicacions per email, telèfon i WhatsApp sobre horaris, factures, beques i seguiment educatiu.</label>
-            <label style="display:flex;gap:8px;align-items:flex-start"><input type="checkbox" id="lopd-consent-coord" style="width:auto;margin-top:3px"> Autoritzo la coordinació educativa amb escola/institut o professionals vinculats, quan sigui necessari.</label>
-            <label style="display:flex;gap:8px;align-items:flex-start"><input type="checkbox" id="lopd-consent-img" style="width:auto;margin-top:3px"> Autoritzo l’ús intern d’imatges o vídeos. No autoritza publicació externa sense consentiment específic.</label>
-            <h3 style="margin-top:16px">Signatura</h3>
-            <p class="mini-note">Signa dins del requadre amb el ratolí o el dit.</p>
-            <canvas id="lopd-signature"></canvas>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:12px">
-              <button class="btn btn-secondary" onclick="clearLOPDSignature()">Esborrar signatura</button>
-              <button class="btn btn-primary" onclick="saveLOPDDocument()">💾 Guardar document signat i actualitzar alumne</button>
+
+            <!-- DADES DEL TUTOR -->
+            <div style="margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:16px">
+              <h3 style="margin-bottom:12px">👥 Dades del Tutor Legal</h3>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                <div>
+                  <label style="display:block;font-weight:500;margin-bottom:4px">Nom *</label>
+                  <input type="text" name="tutor_nom" placeholder="Ex: Maria" required style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px">
+                </div>
+                <div>
+                  <label style="display:block;font-weight:500;margin-bottom:4px">Cognoms *</label>
+                  <input type="text" name="tutor_cognoms" placeholder="Ex: García López" required style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px">
+                </div>
+              </div>
+
+              <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-bottom:12px">
+                <div>
+                  <label style="display:block;font-weight:500;margin-bottom:4px">DNI/NIE *</label>
+                  <input type="text" name="tutor_dni" placeholder="12345678X" maxlength="12" required style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px">
+                </div>
+                <div>
+                  <label style="display:block;font-weight:500;margin-bottom:4px">Telèfon *</label>
+                  <input type="tel" name="tutor_tel" placeholder="+34 600 000 000" required style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px">
+                </div>
+              </div>
+
+              <div>
+                <label style="display:block;font-weight:500;margin-bottom:4px">Email *</label>
+                <input type="email" name="tutor_email" placeholder="maria@email.com" required style="width:100%;padding:8px 10px;border:1px solid var(--border);border-radius:6px">
+              </div>
             </div>
-          </div>
+
+            <!-- CONSENTIMENTS GDPR -->
+            <div style="margin-bottom:24px;border-bottom:1px solid var(--border);padding-bottom:16px">
+              <h3 style="margin-bottom:12px">📋 Consentiments RGPD</h3>
+              <div style="background:var(--surface2);padding:12px;border-radius:6px;margin-bottom:12px;font-size:0.85rem;line-height:1.4">
+                Les vostres dades estan protegides conforme a la Normativa de Protecció de Dades (RGPD). Es farà ús únic per a fins educatius. Podeu exercir els drets d’accés, rectificació o supressió de dades en qualsevol moment contactant amb aura.informacio@gmail.com
+              </div>
+
+              <div style="display:flex;flex-direction:column;gap:10px">
+                <label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer">
+                  <input type="checkbox" name="consent_tractament" value="si" required style="width:auto;margin-top:3px;cursor:pointer">
+                  <span>Accepto el tractament de dades personals necessari per a la prestació dels serveis educatius *</span>
+                </label>
+                <label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer">
+                  <input type="checkbox" name="consent_comunicacio" value="si" required style="width:auto;margin-top:3px;cursor:pointer">
+                  <span>Autoritzo comunicacions per email, telèfon i WhatsApp sobre horaris, factures i seguiment educatiu *</span>
+                </label>
+                <label style="display:flex;gap:8px;align-items:flex-start;cursor:pointer">
+                  <input type="checkbox" name="consent_coordinacio" value="si" required style="width:auto;margin-top:3px;cursor:pointer">
+                  <span>Autoritzo la coordinació educativa amb escoles/instituts o professionals vinculats *</span>
+                </label>
+              </div>
+            </div>
+
+            <!-- BOTONS -->
+            <div style="display:flex;gap:8px;flex-wrap:wrap">
+              <button type="submit" class="btn btn-primary">✅ Enviar formulari</button>
+              <button type="reset" class="btn btn-secondary">🔄 Netejar formulari</button>
+            </div>
+          </form>
         </div>
-        <div class="card">
-          <div class="card-header"><h3>📨 Enviar formulari</h3></div>
-          <div class="card-body" style="padding:16px">
-            <div class="info-box"><b>Jotform conectado:</b> este panel ya usa el formulario de Jotform de Aura. Selecciona un alumno/a, se generará un enlace con sus datos precargados y podrás enviarlo por WhatsApp o email. Ya no necesitas Google Apps Script, URL /exec ni tokens.</div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
-              <button class="btn btn-success btn-sm" onclick="refreshLOPDPublicLink(); copyLOPDLink()">🔗 Copiar enlace Jotform del alumno</button>
-              <button class="btn btn-secondary btn-sm" onclick="openLOPDJotform()">↗️ Abrir formulario</button>
-              <button class="btn btn-secondary btn-sm" onclick="exportLOPDLinksCSV()">📄 Exportar enlaces Jotform</button>
-              <label class="btn btn-secondary btn-sm" style="cursor:pointer;margin:0">📥 Importar respuestas firmadas<input type="file" accept=".json,.csv" onchange="importLOPDResponsesFile(this)" style="display:none"></label>
-            </div>
-            <div class="form-group"><label>Enllaç Jotform del formulari</label><input id="lopd-form-link" readonly placeholder="Selecciona un alumno para generar el enlace de Jotform"></div>
-            <div class="form-group"><label>Missatge per a famílies</label><textarea id="lopd-send-msg" style="min-height:145px"></textarea></div>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin-top:10px">
-              <button class="btn btn-mail" onclick="sendLOPDByMail()">📧 Enviar per Gmail</button>
-              <button class="btn btn-whatsapp" onclick="sendLOPDByWhatsApp()">📲 Enviar per WhatsApp</button>
-              <button class="btn btn-secondary" onclick="copyLOPDMessage()">Copiar missatge</button>
-            </div>
-            <hr style="border:none;border-top:1px solid var(--border);margin:16px 0">
-            <h3>📁 Arxiu de documents signats</h3>
-            <p class="mini-note">Guarda còpies exportades en una carpeta segura del centre. L’arxiu local depèn d’aquest navegador.</p>
-            <div style="display:flex;gap:8px;flex-wrap:wrap;margin:10px 0">
-              <button class="btn btn-success btn-sm" onclick="exportLOPDArchive()">Exportar arxiu legal JSON</button>
-              <button class="btn btn-secondary btn-sm" onclick="exportLOPDArchiveHTML()">Exportar documents HTML</button>
-              <button class="btn btn-danger btn-sm" onclick="wipeLOPDArchive()">Esborrar arxiu local</button>
-            </div>
-            <div id="lopd-archive-list"></div>
-          </div>
+      </div>
+
+      <!-- INFORMACIÓ DE FORMSPREE -->
+      <div class="card" style="margin-top:16px">
+        <div class="card-header"><h3>ℹ️ Sobre aquest formulari</h3></div>
+        <div class="card-body" style="padding:16px;font-size:0.9rem;line-height:1.6">
+          <p><b>✅ GDPR Compliant:</b> Formspree processa dades en servidors europeus amb certificacions SOC 2 i ISO 27001.</p>
+          <p><b>🔒 Seguritat:</b> Totes les dades es xifren en trànsit (HTTPS) i es guarden de forma segura.</p>
+          <p><b>📧 On rebreu les respostes:</b> aura.informacio@gmail.com</p>
+          <p><b>🗑️ Drets RGPD:</b> Els tutors legals poden sol·licitar accés, rectificació o supressió de dades en qualsevol moment.</p>
         </div>
       </div>
     </div>
@@ -1855,6 +1771,10 @@ async function crearCopiaSeguridad(motivo='automática',descargar=false, silenci
 }
 async function descargarCopiaSeguridad(){
   await crearCopiaSeguridad('descarga manual',true,false);
+  setTimeout(()=>{
+    const msg='✅ Copia generada!\n\n📍 UBICACIÓN:\nArchivo: Descargas/Aura_Gestio_COPIA_SEGURIDAD_[fecha].json\n\n📁 Si no la ves en Descargas:\n1. Revisa carpeta "Descargas" en tu explorador\n2. Si no aparece, mira archivos recientes (Ctrl+Alt+Shift+B en Edge/Chrome)\n3. Presiona F5 para recargar y reintentar\n\n💡 ALTERNATIVA: También está guardada internamente en la app.\nHaz click en "Ver copias internas" para restaurarla sin descargar.';
+    alert(msg);
+  },1000);
 }
 async function restaurarBackupPayload(payload){
   if(!payload || payload.version!=='AuraGestioBackupV1' || !payload.datos){toast('❌ Copia no válida');return false;}
@@ -2282,7 +2202,8 @@ async function dadesFactura(id){
 }
 function textFactura(f,a){
   const tpl=f.estat==='pendent'||f.estat==='vencida'?PLANTILLES_COMUNICACIO.recordatori:PLANTILLES_COMUNICACIO.factura;
-  return aplicaPlantilla(tpl,{FAMÍLIA:nomAlumne(a),NUM_FACTURA:f.numFactura||'',CONCEPTE:f.concepte||'',IMPORT:Number(f.import||0).toFixed(2),VENCIMENT:formatData(f.venc)});
+  const importMostrat=(f.totalFactura!==undefined)?f.totalFactura:f.import;
+  return aplicaPlantilla(tpl,{FAMÍLIA:nomAlumne(a),NUM_FACTURA:f.numFactura||'',CONCEPTE:f.concepte||'',IMPORT:Number(importMostrat||0).toFixed(2),VENCIMENT:formatData(f.venc)});
 }
 async function enviarWhatsAppFactura(id){const {f,a}=await dadesFactura(id); if(!f)return; if(!a?.tel)toast('⚠️ No hi ha telèfon. Obriré WhatsApp sense destinatari.'); obrirWhatsApp(a?.tel,textFactura(f,a));}
 async function enviarEmailFactura(id){const {f,a}=await dadesFactura(id); if(!f)return; if(!a?.email)toast('⚠️ No hi ha email. Obriré Gmail sense destinatari.'); obrirGmail(a?.email,`Factura ${f.numFactura||''} · Aura Serveis Educatius`,textFactura(f,a));}
@@ -2433,10 +2354,34 @@ function sortByListado(items,sortValue,getters){
   });
 }
 async function obrirFitxaAlumne(id){
-  document.querySelectorAll('.alumne-check').forEach(cb=>cb.checked=Number(cb.value)===Number(id));
+  console.log('✅ obrirFitxaAlumne ejecutándose con ID:',id);
+  const idStr=String(id);
+  console.log('🔍 Buscando checkbox con valor:',idStr);
+
+  const checkboxes=document.querySelectorAll('.alumne-check');
+  console.log('📦 Total checkboxes encontrados:',checkboxes.length);
+
+  let found=false;
+  checkboxes.forEach(cb=>{
+    const cbValue=String(cb.value);
+    const match=cbValue===idStr;
+    cb.checked=match;
+    if(match) found=true;
+  });
+
+  console.log('✓ Checkbox encontrado y marcado:',found);
+
+  console.log('⏳ Esperando alumneCheckboxChanged()...');
   await alumneCheckboxChanged();
+  console.log('✓ alumneCheckboxChanged() completado');
+
   const panel=document.getElementById('alumne-detail-panel');
-  if(panel) panel.scrollIntoView({behavior:'smooth',block:'start'});
+  console.log('🎯 Panel encontrado:',!!panel);
+
+  if(panel){
+    console.log('📜 Haciendo scroll al panel...');
+    panel.scrollIntoView({behavior:'smooth',block:'start'});
+  }
 }
 async function openFacturaDetalle(id){
   await editFactura(id);
@@ -2497,7 +2442,7 @@ async function renderAlumnes(filter=''){
     <td><span class="badge ${a.tipus==='beca_aura'?'badge-purple':'badge-gray'}">${TIPUS_LBL[tipusActual(a.tipus)]||'—'}</span></td>
     <td><span class="badge ${ec[a.estat]||'badge-gray'}">${a.estat}</span></td>
     <td><div class="table-actions">
-      <button class="btn btn-primary btn-sm" onclick="obrirFitxaAlumne(${a.id})">📂 Abrir ficha</button>
+      <button class="btn btn-primary btn-sm" onclick="console.log('📂 Clic en Abrir ficha, ID:',${a.id}); obrirFitxaAlumne(${a.id})">📂 Abrir ficha</button>
       <button class="btn btn-whatsapp btn-sm" title="Enviar WhatsApp" onclick="enviarWhatsAppAlumne(${a.id})">📲 WhatsApp</button>
       <button class="btn btn-mail btn-sm" title="Enviar email" onclick="enviarEmailAlumne(${a.id})">📧 Mail</button>
       <button class="btn btn-secondary btn-sm" onclick="editAlumne(${a.id})">✏️</button>
@@ -2619,7 +2564,7 @@ function netejarFiltresAlumnes(){
 
 
 function idsAlumnesMarcados(){
-  return Array.from(document.querySelectorAll('.alumne-check:checked')).map(cb=>Number(cb.value)).filter(Boolean);
+  return Array.from(document.querySelectorAll('.alumne-check:checked')).map(cb=>String(cb.value).trim()).filter(Boolean);
 }
 function toggleAlumnesSeleccionats(checked){
   document.querySelectorAll('.alumne-check').forEach(cb=>{cb.checked=checked;});
@@ -2633,7 +2578,7 @@ function desmarcarAlumnes(){
 }
 async function alumneCheckboxChanged(){
   const ids=idsAlumnesMarcados();
-  document.querySelectorAll('[data-alumne-row]').forEach(tr=>tr.classList.toggle('alumne-selected-row',ids.includes(Number(tr.dataset.alumneRow))));
+  document.querySelectorAll('[data-alumne-row]').forEach(tr=>tr.classList.toggle('alumne-selected-row',ids.includes(String(tr.dataset.alumneRow))));
   const all=document.getElementById('alumnes-select-all'); if(all) all.checked=ids.length>0 && ids.length===document.querySelectorAll('.alumne-check').length;
   if(ids.length===1) await renderFitxaAlumne(ids[0]);
   else{
@@ -2654,27 +2599,96 @@ function taulaMini(headers,rows,emptyMsg){
   return `<div class="alumne-detail-table-wrap"><table><thead><tr>${headers.map(h=>`<th>${h}</th>`).join('')}</tr></thead><tbody>${rows.join('')}</tbody></table></div>`;
 }
 async function renderFitxaAlumne(id,scroll=false){
-  const [alumnes,previsions,factures,beques,rebudes,comunicats]=await Promise.all([getAll('alumnes'),getAll('previsions'),getAll('factures'),getAll('beques'),getAll('rebudes'),getAll('comunicats')]);
-  const a=alumnes.find(x=>x.id===Number(id)); if(!a)return;
-  const nom=nomAlumne(a);
-  const factAl=factures.filter(f=>Number(f.alumneId)===Number(id)).sort((x,y)=>(y.data||'').localeCompare(x.data||''));
-  const facturesIdSet=new Set(factAl.map(f=>String(f.id)));
-  const facturesNumSet=new Set(factAl.filter(f=>f.numFactura).map(f=>String(f.numFactura)));
-  const prevAl=previsions.filter(p=>Number(p.alumneId)===Number(id)).sort((x,y)=>(y.data||'').localeCompare(x.data||''));
-  const bequesAl=beques.filter(b=>Number(b.alumneId)===Number(id));
-  const movCaja=(await getMovimentsCaja()).filter(m=>normalitzaText(m.concepte||'').includes(normalitzaText(nom)) || (m.origen==='factura_emesa' && factAl.some(f=>'fe-'+f.id===String(m.id))));
+  try{
+    console.log('📂 renderFitxaAlumne iniciado con ID:',id);
+    console.log('⏳ Obteniendo datos de IndexedDB...');
+
+    // Helper para crear timeouts (evita que operaciones se cuelguen)
+    const makeTimeout=(ms)=>new Promise((_,reject)=>setTimeout(()=>reject(new Error('Timeout')),ms));
+
+    let alumnes=[],previsions=[],factures=[],beques=[],rebudes=[],comunicats=[];
+
+    try{
+      console.log('  -> getAll(alumnes)...');
+      alumnes=await Promise.race([getAll('alumnes'),makeTimeout(8000)]);
+      console.log('  ✓ alumnes obtenidos');
+    }catch(e){console.warn('⚠️ Error en alumnes:',e.message);}
+
+    try{
+      console.log('  -> getAll(previsions)...');
+      previsions=await Promise.race([getAll('previsions'),makeTimeout(8000)]);
+      console.log('  ✓ previsions obtenidas');
+    }catch(e){console.warn('⚠️ Error en previsions:',e.message);}
+
+    try{
+      console.log('  -> getAll(factures)...');
+      factures=await Promise.race([getAll('factures'),makeTimeout(8000)]);
+      console.log('  ✓ factures obtenidas');
+    }catch(e){console.warn('⚠️ Error en factures:',e.message);}
+
+    try{
+      console.log('  -> getAll(beques)...');
+      beques=await Promise.race([getAll('beques'),makeTimeout(8000)]);
+      console.log('  ✓ beques obtenidas');
+    }catch(e){console.warn('⚠️ Error en beques:',e.message);}
+
+    try{
+      console.log('  -> getAll(rebudes)...');
+      rebudes=await Promise.race([getAll('rebudes'),makeTimeout(3000)]);
+      console.log('  ✓ rebudes obtenidas');
+    }catch(e){console.warn('⚠️ Error en rebudes (ignorando):',e.message); rebudes=[];}
+
+    try{
+      console.log('  -> getAll(comunicats)...');
+      comunicats=await Promise.race([getAll('comunicats'),makeTimeout(15000)]);
+      console.log('  ✓ comunicats obtenidos');
+    }catch(e){console.warn('⚠️ Error en comunicats:',e.message);}
+
+    console.log('✅ Datos obtenidos. Alumnos:',alumnes.length,'Previsions:',previsions.length);
+
+    // Buscar de múltiples formas para mayor compatibilidad
+    console.log('🔎 Buscando alumno con ID:',id);
+    let a=alumnes.find(x=>x.id===id);
+    if(!a) a=alumnes.find(x=>String(x.id)===String(id));
+    if(!a) a=alumnes.find(x=>Number(x.id)===Number(id));
+
+    if(!a){
+      console.error('❌ Alumno no encontrado. ID buscado:',id,'IDs disponibles:',alumnes.map(x=>x.id));
+      return;
+    }
+
+    console.log('✅ Alumno encontrado:',a.nom,a.cognoms);
+
+    const idStr=String(a.id);
+    const nom=nomAlumne(a);
+    const factAl=factures.filter(f=>String(f.alumneId)===idStr).sort((x,y)=>(y.data||'').localeCompare(x.data||''));
+    const facturesIdSet=new Set(factAl.map(f=>String(f.id)));
+    const facturesNumSet=new Set(factAl.filter(f=>f.numFactura).map(f=>String(f.numFactura)));
+    const prevAl=previsions.filter(p=>String(p.alumneId)===idStr).sort((x,y)=>(y.data||'').localeCompare(x.data||''));
+    const bequesAl=beques.filter(b=>String(b.alumneId)===idStr);
+  let movCaja=[];
+  try{
+    console.log('⏳ Cargando movimientos de caja...');
+    const cajasData=await Promise.race([getMovimentsCaja(), makeTimeout(5000)]);
+    movCaja=cajasData.filter(m=>normalitzaText(m.concepte||'').includes(normalitzaText(nom)) || (m.origen==='factura_emesa' && factAl.some(f=>'fe-'+f.id===String(m.id))));
+    console.log('✓ Caja cargada:', movCaja.length, 'movimientos');
+  }catch(e){
+    console.warn('⚠️ Error cargando caja (timeout):', e.message);
+    movCaja=[];
+  }
   const comAl=comunicats.filter(c=>normalitzaText(c.familia||'')===normalitzaText(nom));
-  const totalFact=factAl.reduce((s,f)=>s+Number(f.import||0),0);
-  const totalPend=factAl.filter(f=>f.estat!=='pagada').reduce((s,f)=>s+Number(f.import||0),0);
+  const totalFact=factAl.reduce((s,f)=>s+Number((f.totalFactura!==undefined)?f.totalFactura:f.import||0),0);
+  const totalPend=factAl.filter(f=>f.estat!=='pagada').reduce((s,f)=>s+Number((f.totalFactura!==undefined)?f.totalFactura:f.import||0),0);
   const totalSes=prevAl.reduce((s,p)=>s+Number(p.aCobrar||0),0);
   const totalPagos=movCaja.reduce((s,m)=>s+Number(m.entrada||0)-Number(m.sortida||0),0);
-  const panel=document.getElementById('alumne-detail-panel'); if(!panel)return;
+  const panel=document.getElementById('alumne-detail-panel');
+  if(!panel){console.error('❌ NO SE ENCONTRÓ el elemento alumne-detail-panel'); return;}
   const rowsPrev=prevAl.map(p=>{
     const facturaValida=(p.facturaId&&facturesIdSet.has(String(p.facturaId))) || (p.facturaNum&&facturesNumSet.has(String(p.facturaNum)));
     const facturaMostrada=facturaValida?(p.facturaNum||p.facturaId):'—';
     return `<tr><td>${formatData(p.data)}</td><td>${p.concepte||'—'}</td><td><span class="serie-${p.serie||'T'}">${p.serie||'T'}</span></td><td>${Number(p.importBrut||0).toFixed(2)} €</td><td>${Number(p.becaDesc||0).toFixed(2)} €</td><td><b>${Number(p.aCobrar||0).toFixed(2)} €</b></td><td>${facturaValida?p.estat:(p.estat==='facturada'?'pendiente':(p.estat||'—'))}</td><td>${facturaMostrada}</td></tr>`;
   });
-  const rowsFact=factAl.map(f=>`<tr><td>${f.numFactura||'—'}</td><td>${formatData(f.data)}</td><td>${f.concepte||'—'}</td><td><b>${Number(f.import||0).toFixed(2)} €</b></td><td>${f.estat||'—'}</td><td><button class="btn btn-secondary btn-sm" onclick="generarPDFFactura(${f.id})">🖨️ PDF</button></td></tr>`);
+  const rowsFact=factAl.map(f=>{const importMostrat=(f.totalFactura!==undefined)?f.totalFactura:f.import;return `<tr><td>${f.numFactura||'—'}</td><td>${formatData(f.data)}</td><td>${f.concepte||'—'}</td><td><b>${Number(importMostrat||0).toFixed(2)} €</b>${f.irpf?` <span style="font-size:0.75rem;color:var(--text3);">(−${Number(f.irpf||0).toFixed(2)} IRPF)</span>`:''}</td><td>${f.estat||'—'}</td><td><button class="btn btn-secondary btn-sm" onclick="generarPDFFactura(${f.id})">🖨️ PDF</button></td></tr>`});
   const rowsBeca=bequesAl.map(b=>{const r=resumBecaAlumne(b.alumneId,beques,previsions,factures);return `<tr><td>${b.tipus||'—'}</td><td>${b.entitat||'—'}</td><td>${Number(b.import||0).toFixed(2)} €</td><td>${r.consumit.toFixed(2)} €</td><td><b>${r.saldo.toFixed(2)} €</b></td><td>${b.estat||'—'}</td></tr>`});
   const rowsCaja=movCaja.map(m=>`<tr><td>${formatData(m.data)}</td><td>${m.tipus==='ingres'?'Cobro/ingreso':'Pago/salida'}</td><td>${m.origen||'—'}</td><td>${m.concepte||'—'}</td><td>${Number(m.entrada||0).toFixed(2)} €</td><td>${Number(m.sortida||0).toFixed(2)} €</td></tr>`);
   const rowsCom=comAl.map(c=>`<tr><td>${formatData(c.data)}</td><td>${c.assumpte||'—'}</td><td>${c.estat||'—'}</td><td>${(c.missatge||'').slice(0,90)}${(c.missatge||'').length>90?'…':''}</td></tr>`);
@@ -2711,29 +2725,237 @@ async function renderFitxaAlumne(id,scroll=false){
       </div>
     </div>
   `;
-  if(scroll) panel.scrollIntoView({behavior:'smooth',block:'start'});
+    if(scroll) panel.scrollIntoView({behavior:'smooth',block:'start'});
+  }catch(err){
+    console.error('❌ Error en renderFitxaAlumne:',err);
+    toast('❌ Error al abrir ficha: '+err.message,5000);
+  }
 }
+
+// Variable global para almacenar datos de fusión
+window._fusionData={};
+
 async function fusionarAlumnesMarcados(){
   const ids=idsAlumnesMarcados();
   if(ids.length<2){toast('⚠️ Marca al menos 2 alumnos para fusionar manualmente');return;}
-  const alumnes=await getAll('alumnes');
-  const marcats=ids.map(id=>alumnes.find(a=>a.id===id)).filter(Boolean);
-  const keep=marcats[0];
-  const noms=marcats.map((a,i)=>`${i===0?'✅ PRINCIPAL':'➡️ se fusiona'}: ${nomAlumne(a)} ${a.dni?('· '+a.dni):''}`).join('\n');
-  if(!confirm(`Fusión manual de alumnos marcados:\n\n${noms}\n\nSe conservará el PRIMERO marcado que aparece en la lista y se moverán a él sesiones/previsiones, facturas, becas y caja manual con alumneId. También se completarán campos vacíos con datos de los otros.\n\nAntes de fusionar es recomendable Exportar. ¿Continuar?`))return;
-  let eliminats=0;
-  for(const dup of marcats.slice(1)){
-    ['nom','cognoms','dni','direccio','cp','poblacio','tel','email','tutor','curs','obs','naix','pagament','serie','estat','tipus'].forEach(k=>{
-      if((!keep[k] || String(keep[k]).trim()==='') && dup[k]) keep[k]=dup[k];
-    });
-    await reasignarRelacionsAlumne(dup.id,keep.id);
-    await deleteItem('alumnes',dup.id);
-    eliminats++;
+
+  try{
+    const alumnes=await getAll('alumnes');
+    const marcats=ids.map(id=>{
+      return alumnes.find(a=>a.id===id) || alumnes.find(a=>String(a.id)===String(id)) || alumnes.find(a=>Number(a.id)===Number(id));
+    }).filter(Boolean);
+
+    if(marcats.length<2){toast('⚠️ No se encuentran los alumnos marcados');return;}
+
+    // Guardar datos en variable global
+    const sessionId='fusion_'+Date.now();
+    window._fusionData[sessionId]={marcats,alumnes};
+
+    // Crear modal para elegir el alumno principal
+    const modalId='modal-fusion-'+sessionId;
+    const modalHTML=`
+      <div id="${modalId}" class="modal-overlay open">
+        <div class="modal">
+          <div class="modal-header">
+            <h2>🔗 Elige el alumno PRINCIPAL</h2>
+          </div>
+          <div class="modal-body">
+            <p style="font-size:0.85rem;color:var(--text2);margin-bottom:14px;">
+              Selecciona cuál de estos alumnos será el principal (conservará todos los datos de los otros):
+            </p>
+            <div style="display:flex;flex-direction:column;gap:8px;" id="fusion-options-${sessionId}">
+              ${marcats.map((a,idx)=>`
+                <label style="padding:10px 12px;border:2px solid var(--border);border-radius:8px;cursor:pointer;background:var(--bg);transition:all 0.15s;display:flex;gap:8px;align-items:center;" data-idx="${idx}" onclick="selectFusionAlumne('${sessionId}',${idx},this)">
+                  <input type="radio" name="alumne-principal-${sessionId}" value="${idx}" style="cursor:pointer;">
+                  <div style="flex:1;">
+                    <div style="font-weight:500;color:var(--text);">${nomAlumne(a)}</div>
+                    ${a.dni?`<div style="font-size:0.75rem;color:var(--text3);">DNI: ${a.dni}</div>`:''}
+                    <div style="font-size:0.75rem;color:var(--text3);">ID: ${a.id}</div>
+                  </div>
+                </label>
+              `).join('')}
+            </div>
+          </div>
+          <div class="modal-footer">
+            <button class="btn btn-secondary" onclick="cerrarFusionModal('${modalId}','${sessionId}')">❌ Cancelar</button>
+            <button class="btn btn-primary" onclick="confirmarFusionAlumnos('${sessionId}')">✅ Continuar</button>
+          </div>
+        </div>
+      </div>
+    `;
+
+    document.body.insertAdjacentHTML('beforeend',modalHTML);
+
+  }catch(err){
+    console.error('❌ Error en fusionarAlumnesMarcados:',err);
+    toast('❌ Error preparando fusión: '+err.message,5000);
   }
-  await putItem('alumnes',keep);
-  toast(`✅ Fusión manual realizada: ${eliminats} alumno/s unidos a ${nomAlumne(keep)}`,6000);
-  await renderAlumnes();
-  setTimeout(()=>{const cb=document.querySelector(`.alumne-check[value="${keep.id}"]`); if(cb){cb.checked=true; alumneCheckboxChanged();}},200);
+}
+
+function selectFusionAlumne(sessionId,idx,labelEl){
+  const radio=labelEl.querySelector('input[type="radio"]');
+  radio.checked=true;
+
+  const container=document.getElementById(`fusion-options-${sessionId}`);
+  if(!container)return;
+
+  const labels=container.querySelectorAll('label');
+  labels.forEach(l=>{
+    l.style.border='2px solid var(--border)';
+    l.style.background='var(--bg)';
+  });
+
+  labelEl.style.border='2px solid var(--accent)';
+  labelEl.style.background='rgba(193,123,58,0.1)';
+}
+
+function cerrarFusionModal(modalId,sessionId){
+  const modal=document.getElementById(modalId);
+  if(modal)modal.remove();
+  delete window._fusionData[sessionId];
+}
+
+async function confirmarFusionAlumnos(sessionId){
+  try{
+    const data=window._fusionData[sessionId];
+    if(!data){
+      toast('⚠️ Datos de sesión perdidos');
+      return;
+    }
+
+    const {marcats,alumnes}=data;
+    const selectedIdx=parseInt(document.querySelector(`input[name="alumne-principal-${sessionId}"]:checked`)?.value||'-1');
+
+    if(selectedIdx<0){
+      toast('⚠️ Debes seleccionar un alumno principal');
+      return;
+    }
+
+    const keep=marcats[selectedIdx];
+    if(!keep){
+      toast('❌ No se encuentra el alumno principal seleccionado');
+      return;
+    }
+
+    // Preparar resumen
+    const noms=marcats.map((a,i)=>`${i===selectedIdx?'✅ PRINCIPAL':'➡️ se transfiere'}: ${nomAlumne(a)} ${a.dni?('· '+a.dni):''}`).join('\n');
+
+    const confirmText=`Fusión de alumnos marcados:\n\n${noms}\n\n📌 ACCIÓN:\n• Se mantienen TODOS los datos del alumno principal\n• Se completan los campos vacíos con datos de los otros\n• Se TRANSFIEREN todas las sesiones, facturas, becas y caja\n• Los alumnos transferidos se ELIMINAN completamente\n\n⚠️ Recomendación: Haz una copia de seguridad antes de continuar.\n\n¿Continuar con la fusión?`;
+
+    if(!confirm(confirmText)){
+      return;
+    }
+
+    // Cerrar modal
+    const modalId='modal-fusion-'+sessionId;
+    const modal=document.getElementById(modalId);
+    if(modal)modal.remove();
+
+    // Iniciar fusión
+    toast('🔄 Procesando fusión...',3000);
+
+    let eliminats=0;
+    let sesionesMovidas=0;
+    let facturasMovidas=0;
+    let becasMovidas=0;
+    const duplicadosABorrar=[];
+
+    // PRIMERO: Transferir todos los datos de duplicados al principal
+    for(let i=0;i<marcats.length;i++){
+      if(i===selectedIdx)continue;
+      const dup=marcats[i];
+
+      try{
+        // Completar datos vacíos del principal con datos del duplicado
+        ['nom','cognoms','dni','direccio','cp','poblacio','tel','email','tutor','curs','obs','naix','pagament','serie','estat','tipus'].forEach(k=>{
+          if((!keep[k] || String(keep[k]).trim()==='') && dup[k]) keep[k]=dup[k];
+        });
+
+        // Transferir previsions (sesiones)
+        const prev=await getAll('previsions');
+        const dup_prev=prev.filter(p=>p.alumneId===dup.id);
+        for(const p of dup_prev){
+          p.alumneId=keep.id;
+          await putItem('previsions',p);
+          sesionesMovidas++;
+        }
+
+        // Transferir facturas
+        const fact=await getAll('factures');
+        const dup_fact=fact.filter(f=>f.alumneId===dup.id);
+        for(const f of dup_fact){
+          f.alumneId=keep.id;
+          await putItem('factures',f);
+          facturasMovidas++;
+        }
+
+        // Transferir becas
+        const becas=await getAll('becas');
+        const dup_beca=becas.filter(b=>b.alumneId===dup.id);
+        for(const b of dup_beca){
+          b.alumneId=keep.id;
+          await putItem('becas',b);
+          becasMovidas++;
+        }
+
+        // Transferir caja
+        const caja=await getAll('caja')||[];
+        const dup_caja=caja.filter(c=>c.alumneId===dup.id);
+        for(const c of dup_caja){
+          c.alumneId=keep.id;
+          await putItem('caja',c);
+        }
+
+        // Marcar para borrar después
+        duplicadosABorrar.push(dup.id);
+
+      }catch(dupErr){
+        console.warn(`⚠️ Error transferiendo datos de ${dup.id}:`,dupErr.message);
+      }
+    }
+
+    // SEGUNDO: Guardar el alumno principal con todos los datos consolidados
+    await putItem('alumnes',keep);
+    console.log('✅ Alumno principal guardado:',keep.id);
+
+    // TERCERO: Ahora borrar los alumnos duplicados
+    for(const dupId of duplicadosABorrar){
+      try{
+        await deleteItem('alumnes',dupId);
+        console.log('✅ Alumno duplicado borrado:',dupId);
+        eliminats++;
+      }catch(delErr){
+        console.error('❌ Error borrando alumno:',dupId,delErr.message);
+      }
+    }
+
+    // Mensaje final
+    let resultMsg=`✅ Fusión realizada: ${eliminats} alumno/s unidos a ${nomAlumne(keep)}`;
+    if(sesionesMovidas)resultMsg+=` · ${sesionesMovidas} sesiones`;
+    if(facturasMovidas)resultMsg+=` · ${facturasMovidas} facturas`;
+    if(becasMovidas)resultMsg+=` · ${becasMovidas} becas`;
+
+    toast(resultMsg,6000);
+
+    // Esperar un poco y luego refrescar UI
+    await new Promise(resolve=>setTimeout(resolve,500));
+
+    // Refrescar UI
+    console.log('🔄 Refrescando lista de alumnos...');
+    await renderAlumnes();
+
+    setTimeout(()=>{
+      const cb=document.querySelector(`.alumne-check[value="${keep.id}"]`);
+      if(cb){cb.checked=true;alumneCheckboxChanged();}
+    },300);
+
+    // Limpiar datos
+    delete window._fusionData[sessionId];
+
+  }catch(err){
+    console.error('❌ Error en confirmarFusionAlumnos:',err);
+    toast('❌ Error durante la fusión: '+err.message,5000);
+  }
 }
 
 
@@ -2859,7 +3081,7 @@ async function renderFactures(){
       <td>${formatData(f.data)}</td>
       <td>${al?al.nom+' '+al.cognoms:'—'}</td>
       <td>${al?`<span class="badge badge-gray">${TIPUS_LBL[al.tipus]||al.tipus||'—'}</span>`:'—'}</td>
-      <td><b>${Number(f.import||0).toFixed(2)} €</b></td>
+      <td><b>${Number((f.totalFactura!==undefined)?f.totalFactura:f.import||0).toFixed(2)} €</b>${f.irpf?` <span style="font-size:0.75rem;color:var(--text3);">(−${Number(f.irpf||0).toFixed(2)} IRPF)</span>`:''}</td>
       <td><span class="badge ${ec[f.estat]||'badge-gray'}">${f.estat}</span></td>
       <td><div class="table-actions">
         <button class="btn btn-primary btn-sm" onclick="openFacturaDetalle(${f.id})">📂 Abrir</button>
@@ -3491,12 +3713,31 @@ async function generarFacturaMensualUnClic(){
 
 // ── IMPORTAR SESSIONS ────────────────────────
 async function importarSessions(input){
-  const file=input.files[0];if(!file)return;input.value='';
-  await proteccionAntesDeCambio('importar sesiones');
-  const reader=new FileReader();
-  reader.onload=async e=>{
-    try{
-      const wb=XLSX.read(new Uint8Array(e.target.result),{type:'array'});
+  const file=input.files[0];
+  if(!file) {
+    console.warn('No file selected');
+    return;
+  }
+  input.value='';
+  console.log('📁 Archivo seleccionado:', file.name);
+  toast('⏳ Importando sesiones...',2000);
+
+  try {
+    const reader=new FileReader();
+
+    reader.onerror=(err)=>{
+      console.error('❌ FileReader error:', reader.error);
+      toast('❌ Error leyendo archivo: '+(reader.error?.message||'Desconocido'),5000);
+    };
+
+    reader.onload=async e=>{
+      try{
+        console.log('📖 Leyendo Excel...');
+        const data=new Uint8Array(e.target.result);
+        console.log('📊 Bytes leídos:', data.length);
+        const wb=XLSX.read(data,{type:'array',cellDates:true,raw:false});
+        console.log('✅ Excel parsed successfully');
+        console.log('📋 Hojas encontradas:', wb.SheetNames);
       const alumnes=await getAll('alumnes');
       const beques=await getAll('beques');
       let ok=0,errors=[],autoAltes=0;
@@ -3559,37 +3800,53 @@ async function importarSessions(input){
         return s.includes('nombre')||s.includes('nom')||s.includes('alumne')||s.includes('apellidos')||s.includes('cognoms');
       }
 
+      let sheetsProcessed=0;
       for(const sheetName of wb.SheetNames.filter(isMonthSheet)){
+        console.log(`📄 Procesando hoja: "${sheetName}"`);
         const ws=wb.Sheets[sheetName];
         const matrix=XLSX.utils.sheet_to_json(ws,{header:1,defval:'',raw:false});
-        if(matrix.length<3)continue;
+        console.log(`   Filas en hoja: ${matrix.length}`);
+        if(matrix.length<3){console.log(`   Saltando (muy pocas filas)`);continue}
         let headerRowIndex=matrix.findIndex(r=>r.some(isHeaderName));
-        if(headerRowIndex<0) headerRowIndex=1;
+        if(headerRowIndex<0) headerRowIndex=0;
+        console.log(`   Encabezado encontrado en fila: ${headerRowIndex}`);
         const header=matrix[headerRowIndex]||[];
+        console.log(`   Encabezado: ${header.slice(0,5).join(' | ')}...`);
         const nameCol=header.findIndex(isHeaderName)>=0?header.findIndex(isHeaderName):0;
         const actCol=header.findIndex(v=>norm(v).includes('actuacion')||norm(v).includes('actuacio')||norm(v).includes('concepte')||norm(v).includes('tipo'));
         const priceCol=header.findIndex(v=>norm(v).includes('precio')||norm(v).includes('preu')||norm(v).includes('import'));
+        console.log(`   Columnas: nombre=${nameCol}, actividad=${actCol}, precio=${priceCol}`);
         const {month,year}=parseSheetDate(sheetName);
-        if(!month){errors.push(`No he pogut detectar el mes de la fulla "${sheetName}"`);continue}
+        if(!month){console.warn(`   ⚠️ No mes detectado`);errors.push(`No he pogut detectar el mes de la fulla "${sheetName}"`);continue}
+        console.log(`   Mes/Año detectado: ${month}/${year}`);
         const dayCols=[];
         header.forEach((h,i)=>{
           const d=Number(String(h).replace(',','.'));
           if(Number.isInteger(d)&&d>=1&&d<=31) dayCols.push({i,day:d});
         });
-        if(!dayCols.length){errors.push(`No he trobat columnes de dies a "${sheetName}"`);continue}
+        console.log(`   Columnas de días encontradas: ${dayCols.length}`);
+        if(!dayCols.length){console.warn(`   ⚠️ Sin columnas de días`);errors.push(`No he trobat columnes de dies a "${sheetName}"`);continue}
 
+        let rowsInSheet=0;
         for(let r=headerRowIndex+1;r<matrix.length;r++){
           const row=matrix[r]||[];
           const fullName=(row[nameCol]||'').toString().trim();
-          if(!fullName || isHeaderName(fullName))continue;
+          if(!fullName || isHeaderName(fullName)){
+            if(fullName) console.log(`   · Saltando fila ${r}: "${fullName}" es header`);
+            continue;
+          }
           const concepte=(actCol>=0?(row[actCol]||''):'Sessió').toString().trim()||'Sessió';
-          const preu=Number(String(priceCol>=0?row[priceCol]:0).replace(',','.'))||0;
-          if(!preu)continue;
+          const priceRaw=priceCol>=0?row[priceCol]:0;
+          const preu=Number(String(priceRaw).replace(',','.'))||0;
+          console.log(`   · Fila ${r}: "${fullName}" | Tipo: "${concepte}" | Precio raw: "${priceRaw}" | Precio: ${preu}`);
+          if(!preu){console.log(`     → SALTANDO (sin precio válido)`);continue}
           const serie=serieFitxer;
           const al=await findOrCreateAlumne(fullName,serie);
+          let diasProcesados=0;
           for(const dc of dayCols){
             const qty=attendanceValue(row[dc.i]);
             if(qty<=0)continue;
+            diasProcesados++;
             const importBrut=preu*qty;
             let becaDesc=0;
             if(al.tipus==='beca_aura'){
@@ -3609,20 +3866,49 @@ async function importarSessions(input){
               estat:becaDesc>=importBrut?'beca':'pendent'
             });
             ok++;
+            rowsInSheet++;
           }
+          if(diasProcesados>0) console.log(`     ✅ Se importaron ${diasProcesados} sesiones para "${fullName}"`);
+          else console.log(`     ⚠️ No se importaron días para "${fullName}" (sin asistencias marcadas)`);
         }
+        console.log(`   ✅ Sesiones en esta hoja: ${rowsInSheet}`);
+        sheetsProcessed++;
       }
 
+      console.log(`✅ Proceso completado: ${sheetsProcessed} hojas, ${ok} sesiones`);
       let msg=`✅ ${ok} sessions importades`;
       if(autoAltes) msg+=` · 👥 ${autoAltes} alumnes creats`;
       if(errors.length) msg+=` · ⚠️ ${errors.length} avisos`;
       toast(msg,6000);
       if(errors.length) setTimeout(()=>alert('Avisos durant la importació:\n\n'+errors.slice(0,80).join('\n')),500);
-      await netejarDuplicatsSessionsIFactures(false);
-      showSection('previsions');
-    }catch(err){toast('❌ Error llegint Excel: '+err.message,5000);console.error(err)}
-  };
-  reader.readAsArrayBuffer(file);
+
+      try {
+        await netejarDuplicatsSessionsIFactures(false);
+      } catch(e) {
+        console.warn('⚠️ Error en netejar duplicats (no crítico):', e.message);
+      }
+
+      try {
+        setTimeout(async ()=>{
+          await renderPrevisions();
+          showSection('previsions');
+          refresh();
+        },500);
+      } catch(e) {
+        console.warn('⚠️ Error en renderPrevisions (no crítico):', e.message);
+      }
+    }catch(err){
+      console.error('❌ Error en bloque try-catch principal:', err);
+      toast('❌ Error llegint Excel: '+err.message,5000);
+      console.error(err);
+    }
+    };
+    reader.readAsArrayBuffer(file);
+
+  }catch(err){
+    console.error('❌ Error en función importarSessions:', err);
+    toast('❌ Error important sessions: '+err.message,5000);
+  }
 }
 
 function descarregarPlantilla(){
@@ -3654,10 +3940,24 @@ function caixaFiltres(){
   };
 }
 async function getMovimentsCaja(){
-  const [manuals,factures,rebudes,alumnes]=await Promise.all([getAll('caja'),getAll('factures'),getAll('rebudes'),getAll('alumnes')]);
+  // Usar allSettled para que fallos en una tabla no detengan todo
+  const makeTO=(ms)=>new Promise((_,reject)=>setTimeout(()=>reject(new Error('TO')),ms));
+  const results=await Promise.allSettled([
+    Promise.race([getAll('caja'),makeTO(3000)]),
+    Promise.race([getAll('factures'),makeTO(3000)]),
+    Promise.race([getAll('rebudes'),makeTO(2000)]),
+    Promise.race([getAll('alumnes'),makeTO(3000)])
+  ]);
+
+  let manuals=[], factures=[], rebudes=[], alumnes=[];
+  if(results[0].status==='fulfilled') manuals=results[0].value;
+  if(results[1].status==='fulfilled') factures=results[1].value;
+  if(results[2].status==='fulfilled') rebudes=results[2].value;
+  if(results[3].status==='fulfilled') alumnes=results[3].value;
+
   const mov=[];
   factures.filter(f=>f.estat==='pagada').forEach(f=>{
-    const al=alumnes.find(a=>a.id===f.alumneId);
+    const al=alumnes.find(a=>String(a.id)===String(f.alumneId));
     const nom=al?`${al.nom||''} ${al.cognoms||''}`:'Sense alumne';
     mov.push({
       id:'fe-'+f.id,auto:true,data:f.dataCobro||f.venc||f.data||today(),tipus:'ingres',origen:'factura_emesa',
@@ -3967,11 +4267,11 @@ function esSesionRealizadaParaBeca(p){
   return !['anulada','anullada','cancelada','cancel·lada','borrador','esborrany'].includes(e);
 }
 function resumBecaAlumne(alumneId,beques,previsions,factures=[],excluirFacturaId=null){
-  const id=Number(alumneId);
+  const idStr=String(alumneId);
 
   // Evita que las becas importadas dos o tres veces inflen el importe concedido.
   const bequesAlumne=fusionaBequesDuplicadesVirtual(beques).filter(b=>
-    Number(b.alumneId)===id &&
+    String(b.alumneId)===idStr &&
     b.gestionadaAura==='si' &&
     ['concedida','rebuda'].includes(b.estat)
   );
@@ -3982,7 +4282,7 @@ function resumBecaAlumne(alumneId,beques,previsions,factures=[],excluirFacturaId
   // Fórmula definitiva solicitada:
   // SALDO = IMPORTE CONCEDIDO +/− REGULARIZACIONES − SESIONES REALIZADAS.
   // No se restan facturas para no duplicar sesiones que después se facturan.
-  const previsionsAlumne=(previsions||[]).filter(p=>Number(p.alumneId)===id && esSesionRealizadaParaBeca(p));
+  const previsionsAlumne=(previsions||[]).filter(p=>String(p.alumneId)===idStr && esSesionRealizadaParaBeca(p));
   const consumitSessions=previsionsAlumne.reduce((s,p)=>s+importeSesionRealizada(p),0);
   const consumitFactures=0;
   const consumit=consumitSessions;
@@ -4867,7 +5167,79 @@ async function exportExcel(){
   let saldoCaja=0;
   addSh('Caixa',movCaja.map(m=>{saldoCaja+=Number(m.entrada||0)-Number(m.sortida||0);return {Data:m.data,Tipus:m.tipus==='ingres'?'Entrada':'Sortida',Origen:m.origen,Concepte:m.concepte,Entrada:Number(m.entrada||0),Sortida:Number(m.sortida||0),'Saldo acumulat':saldoCaja,Notes:m.notes||''}}),[12,12,16,45,12,12,14,30]);
 
-  XLSX.writeFile(wb,'Aura_Gestio_'+today()+'.xlsx');toast('✅ Excel exportat!',3000);
+  XLSX.writeFile(wb,'Aura_Gestio_'+today()+'.xlsx');
+  toast('✅ Excel exportat! 📁 Mira la carpeta Descargas',4000);
+  setTimeout(()=>alert('📁 UBICACIÓN DE TU ARCHIVO:\nDescargas/Aura_Gestio_'+today()+'.xlsx\n\nSi no lo ves:\n1. Abre tu carpeta de Descargas\n2. Presiona F5 (recargar) si el explorador estaba abierto\n3. Busca archivo que empiece por "Aura_Gestio"'),1500);
+}
+
+// Exportar solo Alumnos
+async function exportarAlumnos(){
+  toast('⏳ Generant Excel Alumnos...',2000);
+  const alumnes=await getAll('alumnes');
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.json_to_sheet(alumnes.map(a=>({ID:a.id,Nom:a.nom,Cognoms:a.cognoms,'Tipus alumne':a.tipus,'Forma pagament':a.pagament,'Sèrie':a.serie,Curs:a.curs,'Tutor/a':a.tutor,'Telèfon':a.tel,Correu:a.email,'DNI/NUSS':a.dni,Estat:a.estat,Observacions:a.obs})));
+  ws['!cols']=[{wch:6},{wch:14},{wch:18},{wch:16},{wch:16},{wch:6},{wch:10},{wch:20},{wch:10},{wch:18},{wch:13},{wch:24},{wch:30}];
+  XLSX.utils.book_append_sheet(wb,ws,'Alumnos');
+  XLSX.writeFile(wb,'Alumnos_'+today()+'.xlsx');
+  toast('✅ Excel Alumnos exportat! 📁 Mira Descargas',4000);
+  setTimeout(()=>alert('📁 UBICACIÓN:\nDescargas/Alumnos_'+today()+'.xlsx'),1500);
+}
+
+// Exportar solo Sesiones/Previsiones
+async function exportarSesiones(){
+  toast('⏳ Generant Excel Sesiones...',2000);
+  const [previsions,alumnes]=await Promise.all([getAll('previsions'),getAll('alumnes')]);
+  const al2n=id=>{const a=alumnes.find(x=>x.id===id);return a?a.nom+' '+a.cognoms:''};
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.json_to_sheet(previsions.map(p=>({Alumne:al2n(p.alumneId),'Sèrie':p.serie,Data:p.data,Concepte:p.concepte,'Import brut':Number(p.importBrut||0),'Descompte beca':Number(p.becaDesc||0),'A cobrar':Number(p.aCobrar||0),Venciment:p.venc,Estat:p.estat})));
+  ws['!cols']=[{wch:22},{wch:6},{wch:12},{wch:26},{wch:12},{wch:14},{wch:10},{wch:12},{wch:10}];
+  XLSX.utils.book_append_sheet(wb,ws,'Sesiones');
+  XLSX.writeFile(wb,'Sesiones_'+today()+'.xlsx');
+  toast('✅ Excel Sesiones exportat! 📁 Mira Descargas',4000);
+  setTimeout(()=>alert('📁 UBICACIÓN:\nDescargas/Sesiones_'+today()+'.xlsx'),1500);
+}
+
+// Exportar solo Facturas Emitidas
+async function exportarFacturas(){
+  toast('⏳ Generant Excel Facturas...',2000);
+  const [factures,alumnes]=await Promise.all([getAll('factures'),getAll('alumnes')]);
+  const al2n=id=>{const a=alumnes.find(x=>x.id===id);return a?a.nom+' '+a.cognoms:''};
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.json_to_sheet(factures.map(f=>({'Nº Factura':f.numFactura,'Sèrie':f.serie,Alumne:al2n(f.alumneId),Concepte:f.concepte,'Import (€)':Number(f.import||0),Data:f.data,Venciment:f.venc,Estat:f.estat,Notes:f.notes})));
+  ws['!cols']=[{wch:14},{wch:6},{wch:22},{wch:26},{wch:10},{wch:12},{wch:12},{wch:10},{wch:28}];
+  XLSX.utils.book_append_sheet(wb,ws,'Facturas');
+  XLSX.writeFile(wb,'Facturas_'+today()+'.xlsx');
+  toast('✅ Excel Facturas exportat! 📁 Mira Descargas',4000);
+  setTimeout(()=>alert('📁 UBICACIÓN:\nDescargas/Facturas_'+today()+'.xlsx'),1500);
+}
+
+// Exportar solo Cobros (Facturas Pagadas)
+async function exportarCobros(){
+  toast('⏳ Generant Excel Cobros...',2000);
+  const [factures,alumnes]=await Promise.all([getAll('factures'),getAll('alumnes')]);
+  const al2n=id=>{const a=alumnes.find(x=>x.id===id);return a?a.nom+' '+a.cognoms:''};
+  const facturaPagadas=factures.filter(f=>f.estat==='pagada');
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.json_to_sheet(facturaPagadas.map(f=>({'Nº Factura':f.numFactura,'Sèrie':f.serie,Alumne:al2n(f.alumneId),Concepte:f.concepte,'Import (€)':Number(f.import||0),Data:f.data,'Data Cobro':f.dataPagada||f.data,Estat:'Pagada',Notes:f.notes})));
+  ws['!cols']=[{wch:14},{wch:6},{wch:22},{wch:26},{wch:10},{wch:12},{wch:12},{wch:10},{wch:28}];
+  XLSX.utils.book_append_sheet(wb,ws,'Cobros');
+  XLSX.writeFile(wb,'Cobros_'+today()+'.xlsx');
+  toast('✅ Excel Cobros exportat! 📁 Mira Descargas',4000);
+  setTimeout(()=>alert('📁 UBICACIÓN:\nDescargas/Cobros_'+today()+'.xlsx'),1500);
+}
+
+// Exportar solo Caja
+async function exportarCaja(){
+  toast('⏳ Generant Excel Caixa...',2000);
+  const movCaja=await getMovimentsCaja();
+  let saldoCaja=0;
+  const wb=XLSX.utils.book_new();
+  const ws=XLSX.utils.json_to_sheet(movCaja.map(m=>{saldoCaja+=Number(m.entrada||0)-Number(m.sortida||0);return {Data:m.data,Tipus:m.tipus==='ingres'?'Entrada':'Sortida',Origen:m.origen,Concepte:m.concepte,Entrada:Number(m.entrada||0),Sortida:Number(m.sortida||0),'Saldo acumulat':saldoCaja,Notes:m.notes||''}}));
+  ws['!cols']=[{wch:12},{wch:12},{wch:16},{wch:45},{wch:12},{wch:12},{wch:14},{wch:30}];
+  XLSX.utils.book_append_sheet(wb,ws,'Caixa');
+  XLSX.writeFile(wb,'Caixa_'+today()+'.xlsx');
+  toast('✅ Excel Caixa exportat! 📁 Mira Descargas',4000);
+  setTimeout(()=>alert('📁 UBICACIÓN:\nDescargas/Caixa_'+today()+'.xlsx'),1500);
 }
 
 async function importExcel(input){
